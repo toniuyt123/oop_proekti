@@ -1,7 +1,10 @@
 #include <iostream>
+#include <sstream>
 
 #include "Item.hpp"
 
+Item::Item()
+    : name(""), expirationDate(), admissionDate(), manufacturerName(""), metric(kg), quantity(0), comment("") {};
 
 Item::Item(std::string name, Date expirationDate, Date admissionDate, std::string manufacturerName, Metric metric, int quantity, std::string comment)
     : name(name), expirationDate(expirationDate), admissionDate(admissionDate), manufacturerName(manufacturerName), metric(metric), quantity(quantity), comment(comment) {};
@@ -60,12 +63,55 @@ void Item::setComment(std::string comment) {
     this->comment = comment;
 }
 
+std::ostream& operator<<(std::ostream& os, const Item& item) {
+    os << item.name << " " << item.expirationDate << " " << item.admissionDate << " " << item.manufacturerName << " " 
+        << item.metric << " " << item.quantity << " " << item.comment;
+
+    return os;
+}
+
+std::istream& operator>>(std::istream& input, Item& item) { 
+    input >> item.name >> item.expirationDate >> item.admissionDate >> item.manufacturerName 
+        >> item.metric >> item.quantity >> item.comment;
+
+    return input;            
+}
+
+std::istream& operator>>(std::istream& is, Metric& m) {
+    std::string tmp;
+
+    if (is >> tmp) {
+        if (tmp == "kg") {
+            m = kg;
+        } else if (tmp == "l") {
+            m = l;
+        } else {
+            throw "Invalid metric";
+        }   
+    }
+
+    return is;
+}
+
+std::ostream& operator<<(std::ostream& os, const Metric& m) {
+    std::string tmp;
+
+    switch (m) {
+        case kg:  tmp = "kg"; break; 
+        case l: tmp = "l"; break; 
+        default: tmp = "?";
+    }
+
+    return os << tmp;
+} 
 
 void Item::print() {
     std::cout << this->manufacturerName << " " << this->name << " " << this->quantity << this->metric;
     std::cout << " Admissioned at: " << this->admissionDate << " Expires at: " << this->expirationDate << ". Comment: " << this->comment; 
 }
 
-void Item::updateQuantity(int amount) {
+int Item::updateQuantity(int amount) {
     this->quantity += amount;
+
+    return this->quantity;
 }

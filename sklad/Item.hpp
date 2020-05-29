@@ -14,9 +14,9 @@ private:
     std::string manufacturerName;
     Metric metric;
     int quantity;
-    // place
     std::string comment;
 public:
+    Item();
     Item(std::string, Date, Date, std::string, Metric, int, std::string);
     Item(std::string, Date, Date, std::string, Metric, int);
     Item(std::string, Date, std::string, Metric, int, std::string);
@@ -39,7 +39,13 @@ public:
     void setComment(std::string);
 
     void print();
-    void updateQuantity(int);
+    int updateQuantity(int);
+    
+    friend std::ostream& operator<<(std::ostream&, const Item&);
+    friend std::istream& operator>>(std::istream&, Item&);
 };
+
+std::ostream& operator<<(std::ostream&, const Metric&);
+std::istream& operator>>(std::istream&, Metric&);
 
 #endif

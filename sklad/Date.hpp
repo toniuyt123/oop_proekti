@@ -7,6 +7,7 @@ public:
     int month;
     int day;
 
+    Date();
     Date(int, int, int);
 
     bool isLeap();
@@ -14,6 +15,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream&, const Date&);
+std::istream& operator>>(std::istream&, Date&);
 
 bool operator== (Date const&, Date const&);
 bool operator!= (Date const&, Date const&);

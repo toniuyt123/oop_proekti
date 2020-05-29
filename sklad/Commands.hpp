@@ -37,6 +37,8 @@ protected:
 public:
     FileCommand(std::string, Warehouse&);
 
+    Warehouse& getWarehouse() const;
+
     virtual void execute() = 0;
 };
 
@@ -69,47 +71,35 @@ public:
     void execute();
 };
 
-class WarehouseCommand : public BaseCommand {
-private:
-    Warehouse& warehouse;
-public:
-    WarehouseCommand(std::string, Warehouse&);
-
-    Warehouse& getWarehouse() const;
-    void setWarehouse(Warehouse&);
-
-    virtual void execute() = 0;
-};
-
-class PrintCommand : public WarehouseCommand {
+class PrintCommand : public FileCommand {
 public:
     PrintCommand(Warehouse&);
 
     void execute();
 };
 
-class AddCommand : public WarehouseCommand {
+class AddCommand : public FileCommand {
 public:
     AddCommand(Warehouse&);
 
     void execute();
 };
 
-class RemoveCommand : public WarehouseCommand {
+class RemoveCommand : public FileCommand {
 public:
     RemoveCommand(Warehouse&);
 
     void execute();
 };
 
-class LogCommand : public WarehouseCommand {
+class LogCommand : public FileCommand {
 public:
     LogCommand(Warehouse&);
 
     void execute();
 };
 
-class CleanCommand : public WarehouseCommand {
+class CleanCommand : public FileCommand {
 public:
     CleanCommand(Warehouse&);
 

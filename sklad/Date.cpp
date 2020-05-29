@@ -5,6 +5,7 @@
 
 #include "Date.hpp"
 
+Date::Date() : year(1), month(1), day(1) {};
 Date::Date(int year, int month, int day) : year(year), month(month), day(day) {
     if (year < 0) {
         throw "Invalid date";
@@ -39,6 +40,20 @@ std::ostream& operator<<(std::ostream& os, const Date& date) {
     os << date.year << '-' << date.month << '-' << date.day;
     
     return os;
+}
+
+std::istream& operator>>(std::istream& input, Date& date) {
+    std::string token;
+
+    std::getline(input, token, '-');
+    date.year = std::stoi(token);
+    std::getline(input, token, '-');
+    date.month = std::stoi(token);
+    // std::getline(input, token, ' ');
+    // date.day = std::stoi(token);
+    input >> date.day;
+
+    return input;            
 }
 
 bool operator== (Date const& lhs, Date const& rhs) {
