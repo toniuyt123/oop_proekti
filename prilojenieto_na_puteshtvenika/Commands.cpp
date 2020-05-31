@@ -4,6 +4,7 @@
 
 #include "Commands.hpp"
 #include "User.hpp"
+#include "Travel.hpp"
 
 BaseCommand::BaseCommand(std::string name) : name(name) {};
 UserCommand::UserCommand(std::string name, User& user, DatabaseHelper& dbh) : BaseCommand(name), user(user), dbh(dbh) {};
@@ -13,7 +14,9 @@ ExitCommand::ExitCommand() : BaseCommand("exit") {};
 
 RegisterCommand::RegisterCommand(User& user, DatabaseHelper& dbh) : UserCommand("register", user, dbh) {};
 LoginCommand::LoginCommand(User& user, DatabaseHelper& dbh) : UserCommand("login", user, dbh) {};
-TravelCommand::TraveCommand(User& user, DatabaseHelper& dbh) : UserCommand("travel", user, dbh) {};
+TravelCommand::TravelCommand(User& user, DatabaseHelper& dbh) : UserCommand("travel", user, dbh) {};
+FriendCommand::FriendCommand(User& user, DatabaseHelper& dbh) : UserCommand("friend", user, dbh) {};
+BrowseCommand::BrowseCommand(User& user, DatabaseHelper& dbh) : UserCommand("browse", user, dbh) {};
 
 std::string BaseCommand::getName() const {
     return this->name;
@@ -88,24 +91,36 @@ void LoginCommand::execute() {
 
 void TravelCommand::execute() {
     if (this->user.getLoggedIn()) {
-        std::string username, password;
-        
-        std::cout << "Enter username: ";
-        std::cin >> username;
-        std::cout << "Enter password: ";
-        std::cin >> password;
+        Travel travel;
 
-        this->user = this->dbh.getUser(username);
+        std::cin >> travel;
 
-        if (this->user.checkCredentials(username, password)) {
-            this->user.setLoggedIn(true);
-        } else {
-            this->user = User();
+        this->dbh.recordTravel(this->user, travel);
+    } else {
+        throw "Not logged in";
+    }
+}
 
-            throw "Invalid username or password";
+void BrowseCommand::execute() {
+    for (auto& fr : this->user.getFriends()) {
+        std::vector<Travel> travels = this->dbh.getTravels(fr);
+
+        for (auto& travel : travels) {
+            std::cout << fr << " traveled to ";
+            travel.print();
         }
+    }
+}
 
-        std::cout << "Loged in!";
+void FriendCommand::execute() {
+    if (this->user.getLoggedIn()) {
+        std::string name;
+        
+        std::cout << "Enter friend name";
+        std::cin >> name;
+
+        this->user.addFriend(name);
+        this->dbh.addFriend(this->user, name);
     } else {
         throw "Not logged in";
     }

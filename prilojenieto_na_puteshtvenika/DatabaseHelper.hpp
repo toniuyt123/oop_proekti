@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "User.hpp"
+#include "Travel.hpp"
 
 class DatabaseHelper {
 private:
@@ -17,7 +18,9 @@ public:
     bool userExists(std::string);
     User getUser(std::string);
     void recordUser(const User&);
-
-};
+    void recordTravel(const User&, const Travel&);
+    std::vector<Travel> getTravels(std::string);
+    void addFriend(const User&, std::string);
+}; 
 
 #endif

@@ -63,4 +63,18 @@ public:
     void execute();
 };
 
+class BrowseCommand : public UserCommand {
+public:
+    BrowseCommand(User&, DatabaseHelper&);
+
+    void execute();
+};
+
+class FriendCommand : public UserCommand {
+public:
+    FriendCommand(User&, DatabaseHelper&);
+
+    void execute();
+};
+
 #endif

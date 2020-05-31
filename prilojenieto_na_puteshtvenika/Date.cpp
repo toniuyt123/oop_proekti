@@ -46,8 +46,10 @@ std::istream& operator>>(std::istream& input, Date& date) {
     std::string token;
 
     std::getline(input, token, '-');
+    std::cout << token;
     date.year = std::stoi(token);
     std::getline(input, token, '-');
+        std::cout << token;
     date.month = std::stoi(token);
     // std::getline(input, token, ' ');
     // date.day = std::stoi(token);

@@ -31,6 +31,7 @@ public:
     void setComment(std::string);
     void setPhotos(std::vector<std::string>);
 
+    void print() const;
     void addPhoto(std::string);
 
     friend std::ostream& operator<<(std::ostream&, const Travel&);

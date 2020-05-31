@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iostream>
 
 #include "Travel.hpp"
 
@@ -85,6 +86,21 @@ void Travel::setPhotos(std::vector<std::string> photos) {
     this->photos = photos;
 }
 
+void Travel::addPhoto(std::string photo) {
+    this->photos.push_back(photo);
+}
+
+void Travel::print() const {
+    std::cout << this->destination << " from " << this->from << " to " << this->to << " Rated: "
+        << this->grade << " \"" << this->comment << "\" Photos:";
+    
+    for (auto& photo : photos) {
+        std::cout << " " << photo;
+    }
+
+    std::cout << std::endl;
+}
+
 std::ostream& operator<<(std::ostream& os, const Travel& travel) {
     os << travel.destination << "|" << travel.from << "|" << travel.to
         << "|" << travel.grade << "|" << travel.comment << "|";
@@ -106,19 +122,18 @@ std::istream& operator>>(std::istream& is, Travel& travel) {
     std::getline(is, token, '|');
     stream.str(token);
     stream >> travel.from;
+    stream.clear();
 
     std::getline(is, token, '|');
     stream.str(token);
     stream >> travel.to;
+    stream.clear();
 
     std::getline(is, token, '|');
     stream.str(token);
     stream >> travel.grade;
+    stream.clear();
     
-    std::getline(is, token, '|');
-    stream.str(token);
-    stream >> travel.from;
-
     std::getline(is, travel.comment, '|');
 
     std::getline(is, token, '|');

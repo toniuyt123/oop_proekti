@@ -25,6 +25,10 @@ bool User::getLoggedIn() const {
     return this->loggedIn;
 }
 
+std::vector<std::string> User::getFriends() const {
+    return this->friends;
+}
+
 void User::setLoggedIn(bool loggedIn) {
     this->loggedIn = loggedIn;
 }
