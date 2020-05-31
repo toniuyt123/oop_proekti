@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "DatabaseHelper.hpp"
+#include "User.hpp"
 
 std::string DatabaseHelper::dbName = "users.db";
 
@@ -62,13 +63,32 @@ std::vector<Travel> DatabaseHelper::getTravels(std::string username) {
         std::istringstream stream;
         stream.str(line);
         stream >> t;
-        std::cout << "Travel read : " << t.getDestination() << std::endl;
+
         travels.push_back(t);
     }
 
     travelsFile.close();
 
     return travels;
+}
+
+std::vector<User> DatabaseHelper::getUsers() {
+    std::ifstream usersFile(DatabaseHelper::dbName, std::ios::in);
+    std::vector<User> users;
+    std::string line;
+    User user;
+
+    while(std::getline(usersFile, line)) {
+        std::istringstream stream;
+        stream.str(line);
+        stream >> user;
+
+        users.push_back(user);
+    }
+
+    usersFile.close();
+
+    return users;
 }
 
 void DatabaseHelper::addFriend(const User& user, std::string fr) {

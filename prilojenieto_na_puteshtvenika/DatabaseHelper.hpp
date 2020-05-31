@@ -20,6 +20,7 @@ public:
     void recordUser(const User&);
     void recordTravel(const User&, const Travel&);
     std::vector<Travel> getTravels(std::string);
+    std::vector<User> getUsers(); 
     void addFriend(const User&, std::string);
 }; 
 

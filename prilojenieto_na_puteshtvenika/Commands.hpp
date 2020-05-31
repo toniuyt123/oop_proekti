@@ -77,4 +77,19 @@ public:
     void execute();
 };
 
+class ListCommand : public UserCommand {
+public:
+    ListCommand(User&, DatabaseHelper&);
+
+    void execute();
+};
+
+class ListGradesCommand : public UserCommand {
+public:
+    ListGradesCommand(User&, DatabaseHelper&);
+
+    void execute();
+};
+
+
 #endif

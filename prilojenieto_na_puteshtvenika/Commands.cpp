@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <set>
+#include <map>
 
 #include "Commands.hpp"
 #include "User.hpp"
@@ -17,6 +19,8 @@ LoginCommand::LoginCommand(User& user, DatabaseHelper& dbh) : UserCommand("login
 TravelCommand::TravelCommand(User& user, DatabaseHelper& dbh) : UserCommand("travel", user, dbh) {};
 FriendCommand::FriendCommand(User& user, DatabaseHelper& dbh) : UserCommand("friend", user, dbh) {};
 BrowseCommand::BrowseCommand(User& user, DatabaseHelper& dbh) : UserCommand("browse", user, dbh) {};
+ListCommand::ListCommand(User& user, DatabaseHelper& dbh) : UserCommand("list", user, dbh) {};
+ListGradesCommand::ListGradesCommand(User& user, DatabaseHelper& dbh) : UserCommand("list_grades", user, dbh) {};
 
 std::string BaseCommand::getName() const {
     return this->name;
@@ -27,12 +31,15 @@ User& UserCommand::getUser() const {
 }
 
 void HelpCommand::execute() {
-    std::cout << "The following   commands are supported:" << std::endl;
+    std::cout << "The following commands are supported:" << std::endl;
     std::cout << "help         prints this information" << std::endl;
     std::cout << "exit         exists the program" << std::endl;
     std::cout << "register     register new user" << std::endl;
     std::cout << "login        login to existing user" << std::endl;
-    std::cout << "travel       record oen of your travels." << std::endl;
+    std::cout << "travel       record one of your travels." << std::endl;
+    std::cout << "browse       list all of your friends' travels" << std::endl;
+    std::cout << "list         list all destinations in the database" << std::endl;
+    std::cout << "list_grades  list all destinations with grades from users and average grade" << std::endl;
 }
 
 void ExitCommand::execute() {
@@ -121,6 +128,62 @@ void FriendCommand::execute() {
 
         this->user.addFriend(name);
         this->dbh.addFriend(this->user, name);
+    } else {
+        throw "Not logged in";
+    }
+}
+
+void ListCommand::execute() {
+    if (this->user.getLoggedIn()) {
+        std::vector<User> users = this->dbh.getUsers();
+        std::set<std::string> destinations;
+
+        for (auto& user : users) {
+            std::vector<Travel> travels = this->dbh.getTravels(user.getUsername());
+
+            for (auto& travel : travels) {
+                destinations.insert(travel.getDestination());
+            }
+        }
+
+        std::cout << "List of all destinations: " << std::endl;
+        for (auto& destination : destinations) {
+            std::cout << "- " << destination << std::endl;
+        }
+    } else {
+        throw "Not logged in";
+    }
+}
+
+void ListGradesCommand::execute() {
+    if (this->user.getLoggedIn()) {
+        std::vector<User> users = this->dbh.getUsers();
+        std::map<std::string, std::pair<int, float>> destinations;
+
+        for (auto& user : users) {
+            std::vector<Travel> travels = this->dbh.getTravels(user.getUsername());
+
+
+            for (auto& travel : travels) {
+                std::cout << user.getUsername() << " gave " << travel.getDestination() << " grade " << travel.getGrade() << std::endl;
+
+                if (destinations.find(travel.getDestination()) == destinations.end()) {
+                    destinations.insert(
+                        std::pair<std::string, std::pair<int, float>>(
+                            travel.getDestination(), std::pair<int, float>(1, travel.getGrade())
+                        )
+                    );
+                } else {
+                    destinations[travel.getDestination()].first++;
+                    destinations[travel.getDestination()].second += travel.getGrade();
+                }
+            }
+        }
+
+        std::cout << "Average grades: " << std::endl;
+        for (auto& [destination, grades] : destinations) {
+            std::cout << "- " << destination <<  " AVG: " << (grades.second / grades.first) << std::endl;
+        }
     } else {
         throw "Not logged in";
     }

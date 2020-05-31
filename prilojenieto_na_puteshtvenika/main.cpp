@@ -20,6 +20,8 @@ int main() {
     commands.push_back(new TravelCommand(user, dbh));
     commands.push_back(new FriendCommand(user, dbh));
     commands.push_back(new BrowseCommand(user, dbh));
+    commands.push_back(new ListCommand(user, dbh));
+    commands.push_back(new ListGradesCommand(user, dbh));
 
     while (true) {
         try {
